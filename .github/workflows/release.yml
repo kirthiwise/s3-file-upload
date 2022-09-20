@@ -25,7 +25,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
-      - name: Install aws cli dependancies
       - name: Release to S3
         env:
           AWS_S3_BUCKET: ${{secrets.AWS_Bucket_Name}}
