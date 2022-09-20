@@ -32,6 +32,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_Access_Secret}}
         run: |
           aws configure
+          AWS Access Key ID: ${{secrets.AWS_Bucket_Name}}
           sudo apt-get install awscli
           zip -r dce.zip DCE/
           aws s3 sync dce.zip s3:://${{secrets.AWS_Bucket_Name}}
