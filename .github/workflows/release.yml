@@ -36,5 +36,5 @@ jobs:
           sudo apt-get install awscli
           echo $aws --version
           zip -r dce.zip DCE/
-          aws s3 sync dce.zip s3:://AWS_S3_BUCKET
+          aws s3 cp dce.zip s3:://AWS_S3_BUCKET
         
