@@ -33,7 +33,7 @@ jobs:
         run: |
           
           sudo apt-get install awscli
-          echo $aws --version
+        
           zip -r dce.zip DCE/
-          aws s3 sync dce.zip s3:://${{secrets.AWS_Bucket_Name}}
+          aws s3 cp dce.zip s3:://${{secrets.AWS_Bucket_Name}}
         

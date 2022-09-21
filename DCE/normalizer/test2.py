@@ -1,2 +1,2 @@
-print("oloioopl")
-print("oiioppp")
+print("mmmmmmmmmm")
+print("hmmmmmmmmm")
