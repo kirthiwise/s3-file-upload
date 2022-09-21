@@ -2,7 +2,7 @@ name : ReleaseCI
 on: 
   push:
     branches: ["main"]
-    paths: ["DCE/**"]
+    paths: ["dce/**"]
 jobs:
   detect-file-changes:
     runs-on: ubuntu-18.04
@@ -19,7 +19,7 @@ jobs:
         with:
           filters: |
             dce:
-              - 'DCE/**'
+              - 'dce/**'
   dce:
     needs: [detect-file-changes]
     runs-on: ubuntu-18.04
@@ -34,6 +34,7 @@ jobs:
         run: |
           
           sudo pip install awscli
-          zip -r dce.zip DCE/
+          zip -r dce.zip dce/
           aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}/module/
-        
+          ls
+          pwd
