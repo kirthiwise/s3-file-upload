@@ -30,8 +30,8 @@ jobs:
           AWS_S3_BUCKET: ${{secrets.AWS_Bucket_Name}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_Access_Key}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_Access_Secret}}
-        run: |
-          aws configure set aws_access_key_id ${{secrets.AWS_Access_Key}}
+        code: |
+          aws configure set aws_access_key_id AWS_ACCESS_KEY_ID
           aws configure set aws_secret_access_key ${{secrets.AWS_Access_Secret}}
           sudo apt-get install awscli
           zip -r dce.zip DCE/
