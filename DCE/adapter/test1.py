@@ -1,6 +1,1 @@
-print(skdfjklajs)
-print("vuedata.")
-print("redmiii")
-print("sadfkljdfsa")
-print("redminote10")
-print("asfdsfdsfd")
+print("kieuweqr")
