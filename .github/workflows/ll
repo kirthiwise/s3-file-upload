@@ -1,6 +1,8 @@
 name : ReleaseCI
-on: 
-  push:
+on:
+  pull_request:
+    types:
+      - closed
     branches: ["main"]
     paths: ["dce/**"]
 jobs:

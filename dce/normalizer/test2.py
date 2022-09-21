@@ -1,11 +1,1 @@
-print("mmmmmmmmmm")
-print("hmmmmmmmmm")
-print("haaaaaan")
-print("ahaaannn")
-print("oeiqwroer")
-print("12345")aaa
-print("12222")
-print("llll")
-print("aslkjfdlkjsdfa
-")sdfa
-print("sakdfjlsasdfdsfsfadjfd")
+sadkfjldkasfj
