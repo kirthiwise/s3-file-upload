@@ -37,3 +37,5 @@ jobs:
           zip -r dce.zip dce/
           aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}/module/
           aws s3 sync dce/scripts/ s3://${{secrets.AWS_Bucket_Name}}/scripts/
+          zip -r dce_lambda.zip dce/scripts/dce_lambda.py
+          aws s3 cp dce_lambda.zip s3://${{secrets.AWS_Bucket_Name}}/scripts/
