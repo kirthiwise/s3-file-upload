@@ -35,7 +35,5 @@ jobs:
           
           sudo pip install awscli
           zip -r dce.zip DCE/
-          pwd
-          ls
-          aws s3 cp /home/runner/work/s3-file-upload/s3-file-upload/dce.zip s3://s3testingfileupload/
+          aws s3 cp dce.zip s3://AWS_S3_BUCKET/module/
         
