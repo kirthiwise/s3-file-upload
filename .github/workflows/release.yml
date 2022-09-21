@@ -36,4 +36,4 @@ jobs:
           sudo pip install awscli
           zip -r dce.zip dce/
           aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}/module/
-          aws s3 cp dce/scripts/ s3://${{secrets.AWS_Bucket_Name}}/scripts/
+          aws s3 sync dce/scripts/ s3://${{secrets.AWS_Bucket_Name}}/scripts/
