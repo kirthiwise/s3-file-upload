@@ -38,3 +38,4 @@ jobs:
           aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}/module/
           ls
           pwd
+          aws s3 cp dce/scripts s3://${{secrets.AWS_Bucket_Name}}/module/
