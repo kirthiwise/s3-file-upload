@@ -35,5 +35,6 @@ jobs:
           
           sudo pip install awscli
           zip -r dce.zip DCE/
-          aws s3 sync /home/runner/work/s3-file-upload/s3-file-upload/dce.zip s3:://s3testingfileupload
+          ls
+          aws s3 sync /home/runner/work/s3-file-upload/s3-file-upload/DCE/dce.zip s3:://s3testingfileupload
         
