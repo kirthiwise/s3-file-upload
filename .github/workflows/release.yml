@@ -30,10 +30,11 @@ jobs:
           AWS_S3_BUCKET: ${{secrets.AWS_Bucket_Name}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_Access_Key}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_Access_Secret}}
+          AWS_DEFAULT_REGION: ${{secrets.AWS_Default_Region}}
         run: |
           
           sudo apt-get install awscli
           echo $aws --version
           zip -r dce.zip DCE/
-          aws s3 cp dce.zip s3:://${{secrets.AWS_Bucket_Name}}
+          aws s3 sync dce.zip s3:://${{secrets.AWS_Bucket_Name}}
         
