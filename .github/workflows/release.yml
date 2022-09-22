@@ -1,6 +1,8 @@
 name : ReleaseCI
-on: 
-  push:
+on:
+  pull_request:
+    types:
+      - closed
     branches: ["main"]
     paths: ["dce/**"]
 jobs:
@@ -10,11 +12,11 @@ jobs:
     outputs:
       dce: ${{ steps.filter.outputs.dce }}
     steps:
-      - name: Checkout Backend code
+      - name: Checkout dce code
         uses: actions/checkout@v1
       # For pull requests it's not necessary to checkout the code
       - name: Apply filters to check file(s) cahnges
-        uses: actions/checkout@v1
+        uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
@@ -37,5 +39,4 @@ jobs:
           zip -r dce.zip dce/
           aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}/module/
           aws s3 sync dce/scripts/ s3://${{secrets.AWS_Bucket_Name}}/scripts/
-          zip -r dce_lambda.zip dce/scripts/dce_lambda.py
-          aws s3 cp dce_lambda.zip s3://${{secrets.AWS_Bucket_Name}}/scripts/
+          aws s3 cp infrastructure/dce/dependent_files/dce_lambda_function.zip s3://${{secrets.AWS_Bucket_Name}}/scripts/
