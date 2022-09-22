@@ -30,6 +30,7 @@ jobs:
           AWS_S3_BUCKET: ${{secrets.AWS_Bucket_Name}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_Access_Key}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_Access_Secret}}
+          AWS_DEFAULT_REGION: ${{secrets.AWS_Default_Region}}
         run: |
           
           sudo apt-get install awscli
