@@ -36,7 +36,7 @@ jobs:
           sudo apt-get install awscli
         
           zip -r dce.zip dce/
-          aws s3 cp dce.zip s3:://${{secrets.AWS_Bucket_Name}}
+          aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}
           aws s3 sync dce/scripts/ s3://${{secrets.AWS_Bucket_Name}}/scripts/
           ls
           aws s3 cp infrastructure/dce/dependent_files/dce_lambda_function.zip s3://${{secrets.AWS_Bucket_Name}}/scripts/
