@@ -1,10 +1,8 @@
 name : ReleaseCI
-on:
-  pull_request:
-    types:
-      - closed
+on: 
+  push:
     branches: ["main"]
-    paths: ["dce/**"]
+    paths: ["DCE/**"]
 jobs:
   detect-file-changes:
     runs-on: ubuntu-20.04
@@ -12,16 +10,16 @@ jobs:
     outputs:
       dce: ${{ steps.filter.outputs.dce }}
     steps:
-      - name: Checkout dce code
+      - name: Checkout Backend code
         uses: actions/checkout@v1
       # For pull requests it's not necessary to checkout the code
       - name: Apply filters to check file(s) cahnges
-        uses: dorny/paths-filter@v2
+        uses: actions/checkout@v1
         id: filter
         with:
           filters: |
             dce:
-              - 'dce/**'
+              - 'DCE/**'
   dce:
     needs: [detect-file-changes]
     runs-on: ubuntu-20.04
@@ -32,11 +30,12 @@ jobs:
           AWS_S3_BUCKET: ${{secrets.AWS_Bucket_Name}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_Access_Key}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_Access_Secret}}
-          AWS_DEFAULT_REGION: ${{secrets.AWS_Default_Region}}
         run: |
           
-          sudo pip install awscli
-          zip -r dce.zip dce/
-          aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}/module/
+          sudo apt-get install awscli
+        
+          zip -r dce.zip DCE/
+          aws s3 cp dce.zip s3:://${{secrets.AWS_Bucket_Name}}
           aws s3 sync dce/scripts/ s3://${{secrets.AWS_Bucket_Name}}/scripts/
+          ls
           aws s3 cp infrastructure/dce/dependent_files/dce_lambda_function.zip s3://${{secrets.AWS_Bucket_Name}}/scripts/
