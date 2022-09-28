@@ -111,12 +111,6 @@ jobs:
         run: echo "$Kirthi"
   deploy-dce:
     needs: [deploy-backend, deploy-frontend, detect-file-changes]
-    if: |
-      always() &&
-      needs.detect-file-changes.outputs.datalake == 'true' &&
-      github.event.push == true &&
-      ((needs.deploy-frontend.result == 'success' || needs.deploy-frontend.result == 'skipped') ||
-      (needs.deploy-backend.result == 'success' || needs.deploy-backend.result == 'skipped'))
     runs-on: ubuntu-20.04
     defaults:
       run:
