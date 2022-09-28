@@ -101,13 +101,13 @@ jobs:
       - name: Add datalake commands here
         run: echo "$Kirthi"
   deploy-dce:
-    needs: [deploy-backend, deploy-frontend, detect-file-changes]
+    needs: [detect-file-changes]
     if: |
       always() &&
-      needs.detect-file-changes.outputs.datalake == 'true' &&
       github.event.push == true &&
-      ((needs.deploy-frontend.result == 'success' || needs.deploy-frontend.result == 'skipped') ||
-      (needs.deploy-backend.result == 'success' || needs.deploy-backend.result == 'skipped'))
+      needs.detect-file-changes.outputs.dce == 'true'
+    outputs:
+      new_sha: ${{ steps.sha.outputs.SHA }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
