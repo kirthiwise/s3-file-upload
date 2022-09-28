@@ -111,7 +111,7 @@ jobs:
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory:dce/
+        working-directory: dce/
     steps:
       - uses: actions/checkout@v1
       - name: Release to S3
