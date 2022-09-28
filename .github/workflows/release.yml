@@ -104,7 +104,8 @@ jobs:
     needs: [detect-file-changes]
     if: |
       github.event.push == true &&
-      needs.detect-file-changes.outputs.dce == 'true'
+      needs.detect-file-changes.outputs.dce == 'true' &&
+      (needs.deploy-dce.result == 'success' || needs.deploy-dce.result == 'skipped')
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
