@@ -103,11 +103,8 @@ jobs:
   deploy-dce:
     needs: [detect-file-changes]
     if: |
-      always() &&
       github.event.push == true &&
       needs.detect-file-changes.outputs.dce == 'true'
-    outputs:
-      new_sha: ${{ steps.sha.outputs.SHA }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
