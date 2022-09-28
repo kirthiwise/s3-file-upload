@@ -1,42 +1,139 @@
-name : ReleaseCI
-on: 
-  push:
-    branches: ["main"]
-    paths: ["dce/**"]
+name: dev-admin (Backend, Frontend , Datalake and DCE)
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - features/SW_2.0-v0.1-branch
+    paths:
+      - "backend/**"
+      - "datalake/**"
+      - "frontend/**"
+      - "dce/**"
+      - "!.github/workflows/"
+      - ".github/workflows/dev-admin.yml"
+  # You can uncomment below block to enable on push event to trigger current workflow
+  # push:
+  #   paths:
+  #     - "backend/**"
+  #     - "datalake/**"
+  #     - "frontend/**"
+  #     - "!.github/workflows/"
+  #     - ".github/workflows/dev-admin.yml"
+  #   branches:
+  #     - features/SW_2.0-v0.1-branch
+
 jobs:
   detect-file-changes:
     runs-on: ubuntu-20.04
     # Set job outputs to values from filter step
     outputs:
-      dce: ${{ steps.filter.outputs.dce }}
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      datalake: ${{ steps.filter.outputs.datalake }}
+      dce: ${{steps.filter.outputs.dce}}
     steps:
       - name: Checkout Backend code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       # For pull requests it's not necessary to checkout the code
       - name: Apply filters to check file(s) cahnges
-        uses: actions/checkout@v1
+        uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'            
+            datalake:
+              - 'datalake/**'
             dce:
               - 'dce/**'
-
-  deploy-dce:
-    needs: [detect-file-changes]
+  deploy-backend:
+    needs: detect-file-changes
+    if: |
+      always() &&
+      github.event.push == true &&
+      needs.detect-file-changes.outputs.backend == 'true'
+    outputs:
+      new_sha: ${{ steps.sha.outputs.SHA }}
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: backend/
+    steps:
+      - name: Checkout Backend code
+        uses: actions/checkout@v1
+          # below we checking out the main branch to build from after pull request is closed
+        with:
+          ref: main
+      - name: Backend code
+        run: echo "$backend"
+  deploy-frontend:
+    needs: [deploy-backend, detect-file-changes]
+    if: |
+      always() &&
+      needs.detect-file-changes.outputs.frontend == 'true' &&
+      github.event.push == true &&
+      (needs.deploy-backend.result == 'success' || needs.deploy-backend.result == 'skipped')
+    outputs:
+      new_sha: ${{ steps.sha.outputs.SHA }}
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: frontend/
+    steps:
+      - name: Checkout Frontend code
+        uses: actions/checkout@v1
+        with:
+          ref: main
+      - name: Add frontend commands here
+        run: echo "$frontend"
+      
+  deploy-datalake:
+    needs: [deploy-backend, deploy-frontend, detect-file-changes]
+    if: |
+      always() &&
+      needs.detect-file-changes.outputs.datalake == 'true' &&
+      github.event.push == true &&
+      ((needs.deploy-frontend.result == 'success' || needs.deploy-frontend.result == 'skipped') ||
+      (needs.deploy-backend.result == 'success' || needs.deploy-backend.result == 'skipped'))
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: datalake/
+    steps:
+      - name: Checkout Frontend code
+        uses: actions/checkout@v1
+        with:
+          ref: main
+      - name: Add datalake commands here
+        run: echo "$Kirthi"
+  deploy-dce:
+    needs: [deploy-backend, deploy-frontend, detect-file-changes]
+    if: |
+      always() &&
+      needs.detect-file-changes.outputs.datalake == 'true' &&
+      github.event.push == true &&
+      ((needs.deploy-frontend.result == 'success' || needs.deploy-frontend.result == 'skipped') ||
+      (needs.deploy-backend.result == 'success' || needs.deploy-backend.result == 'skipped'))
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory:dce/
     steps:
       - uses: actions/checkout@v1
       - name: Release to S3
+        with:
+          ref: main
         env:
           AWS_S3_BUCKET: ${{secrets.AWS_Bucket_Name}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_Access_Key}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_Access_Secret}}
           AWS_DEFAULT_REGION: ${{secrets.AWS_Default_Region}}
         run: |
-          
-          sudo apt-get install awscli
-        
+          sudo pip install awscli
           zip -r dce.zip dce/
-          aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}
+          aws s3 cp dce.zip s3://${{secrets.AWS_Bucket_Name}}/module/
           aws s3 sync dce/scripts/ s3://${{secrets.AWS_Bucket_Name}}/scripts/
-          
+          aws s3 cp infrastructure/dce/dependent_files/dce_lambda_function.zip s3://${{secrets.AWS_Bucket_Name}}/scripts/
