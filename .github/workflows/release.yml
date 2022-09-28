@@ -102,7 +102,7 @@ jobs:
         run: echo "$Kirthi"
   deploy-dce:
     needs: [detect-file-changes]
-    if: dce == 'true'
+    if: (${{steps.filter.outputs.dce}} == 'true')
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
