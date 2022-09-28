@@ -109,20 +109,14 @@ jobs:
       ((needs.deploy-frontend.result == 'success' || needs.deploy-frontend.result == 'skipped') ||
       (needs.deploy-backend.result == 'success' || needs.deploy-backend.result == 'skipped'))
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: dce/
     steps:
       - uses: actions/checkout@v1
       - name: Release to S3
-        with:
-          ref: main
         env:
           AWS_S3_BUCKET: ${{secrets.AWS_Bucket_Name}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_Access_Key}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_Access_Secret}}
           AWS_DEFAULT_REGION: ${{secrets.AWS_Default_Region}}
-        name: Add dce module...
         run: |
           sudo pip install awscli
           zip -r dce.zip dce/
