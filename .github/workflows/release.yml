@@ -115,6 +115,7 @@ jobs:
         run: |
           sudo pip install awscli
           zip -r dce.zip dce/
-          aws s3 cp dce.zip s3://s3testingfileupload/module/
-          aws s3 sync dce/scripts/ s3://s3testingfileupload/scripts/
+          aws s3 cp dce.zip s3://{{AWS_S3_BUCKET}}/module/
+          aws s3 sync dce/scripts/ s3://{{AWS_S3_BUCKET}}/scripts/
+        
           
