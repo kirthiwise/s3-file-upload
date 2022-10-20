@@ -117,7 +117,8 @@ jobs:
           zip -r dce.zip dce/
           aws s3 cp dce.zip s3://$AWS_S3_BUCKET/module/
           aws s3 sync dce/scripts/ s3://$AWS_S3_BUCKET/scripts/
-          zip -r dce_lambda_function.zip frontend/final.py
+          cd frontend/
+          zip -r dce_lambda_function.zip final.py
           aws s3 cp dce_lambda_function.zip s3://$AWS_S3_BUCKET/scripts/
         
           
